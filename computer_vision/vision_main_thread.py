@@ -2,13 +2,12 @@
 
 import cv2 
 import numpy as np 
+import utils as ut
 
 class Get_LaneLine:
 
     def __init__(self):
         pass
-
-
 
     def show(self, CAM_OBJECT : int = 0, show = True):
 
@@ -25,11 +24,19 @@ class Get_LaneLine:
         while True:
             
             ret, frame = cap.read()
+
+            frame1 = cv2.cvtColor(frame, cv2.COLOR_BGR2HLS)
             
-            if ret and show:
+            _, binary = ut.threshold(frame1[:,:,1], thresh=(180,240))
+
+            warped, Minv, unwarped = ut.Perspective(binary)
+
+            if show:
                 
-                cv2.imshow('Raw Image',frame)
+                cv2.imshow('Raw Image',frame)                
                 
+                cv2.imshow('Warped',warped)
+
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     
                     break
