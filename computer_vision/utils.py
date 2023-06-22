@@ -18,7 +18,7 @@ def Perspective(img):
     of the input image with given region of interest points
     """
 
-    src = np.float32([[0,480], [180,200], [460,200], [640,480]])
+    src = np.float32([[0,480], [140,195], [530,195], [640,480]])
     dst = np.float32([[0,img.shape[0]], [0,0], [img.shape[1], 0], [img.shape[1], img.shape[0]]])
     
     M = cv2.getPerspectiveTransform(src, dst)
@@ -29,6 +29,11 @@ def Perspective(img):
 
     return warped, Minv, unwarped
 
+def calc_hist(frame):
+
+  histogram = np.sum(frame[int(frame.shape[0]/2):,:], axis=0)
+
+  return histogram
 
 def histogram_peak(histogram):
     
@@ -43,9 +48,9 @@ def histogram_peak(histogram):
 def get_lane_line_indices_sliding_window(warped_frame,histogram):
     
     frame_sliding_window = warped_frame.copy()
-    nwindows = 7
-    margin = 25
-    minpix = 50
+    nwindows = 10
+    margin = 50
+    minpix = 300
     window_height = int(warped_frame.shape[0]/nwindows)
     
     nonzero = warped_frame.nonzero()
